@@ -46,9 +46,9 @@ jobs:
           - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
+          --health-interval=20s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=5
 
     steps:
       - uses: actions/checkout@v3
@@ -74,10 +74,11 @@ jobs:
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/edeliver
           SPRING_DATASOURCE_USERNAME: root
-          SPRING_DATASOURCE_PASSWORD: 
+          SPRING_DATASOURCE_PASSWORD:
+          SPRING_PROFILES_ACTIVE: test # Ensures the 'test' profile is active
         run: |
           cd EDeliver-backend
-          mvn test
+          mvn test -Dspring.profiles.active=test
           
   Build:
     runs-on: ubuntu-latest
