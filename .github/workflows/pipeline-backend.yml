@@ -93,6 +93,6 @@ jobs:
           cache: maven
       - name: Build Backend App
         run: |
-          cd Edeliver-backend
+          cd EDeliver-backend
           mvn clean package -DskipTests=true
         
