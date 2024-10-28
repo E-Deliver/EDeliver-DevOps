@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mysql:
+    container_name: mysql-server
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: edeliver
+      MYSQL_ROOT_PASSWORD: ''  
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - edeliver-network
+    restart: unless-stopped
+
+  edeliver-backend:
+    container_name: edeliver-backend
+    image: edeliver/edeliver-backend:v1
+    ports:
+      - 9090:9090
+    depends_on:
+      - mysql
+    networks:
+      - edeliver-network
+    restart: unless-stopped
+
+  edeliver-frontend:
+    container_name: edeliver-frontend
+    image: edeliver/edeliver-frontend:v1
+    ports:
+      - 4200:80
+    networks:
+      - edeliver-network
+    depends_on:
+      - edeliver-backend
+
+networks:
+  edeliver-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

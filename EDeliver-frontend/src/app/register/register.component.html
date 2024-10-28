@@ -1,0 +1,40 @@
+<section class=" bg-image" >
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <div class="card shadow-lg p-4" style="border-radius: 15px; background-color: #ffffff;">
+                    <form class="text-center" (ngSubmit)="onSubmit()" #registerForm="ngForm">
+                        
+                        <div class="form-outline mb-4">
+                            <input type="text" name="nom" [(ngModel)]="formData.nom" id="nom" class="form-control form-control-lg" placeholder="Nom Complet" required />
+                        </div>
+                        
+                        <div class="form-outline mb-4">
+                            <input type="text" name="localisation" [(ngModel)]="formData.localisation" id="localisation" class="form-control form-control-lg" placeholder="Adresse" required />
+                        </div>
+                        
+                        <div class="form-outline mb-4">
+                            <input type="email" name="email" [(ngModel)]="formData.email" id="email" class="form-control form-control-lg" placeholder="Email" required />
+                        </div>
+                        
+                        <div class="form-outline mb-3">
+                            <input type="password" name="motDePasse" [(ngModel)]="formData.motDePasse" id="motDePasse" class="form-control form-control-lg" placeholder="Mot de passe" required />
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">S'inscrire</button>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>
+  
+   
+  </section>
+  
+  <!-- Add CSS animation for logo -->
+  <style>
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+  </style>
