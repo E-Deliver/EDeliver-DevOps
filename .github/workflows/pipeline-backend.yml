@@ -65,7 +65,7 @@ jobs:
       - name: Extract project version
         id:  extract_version
         run: |
-          cd edeliver-backend
+          cd EDeliver-backend
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           if [ -z "$VERSION" ]; then
             VERSION="latest"
