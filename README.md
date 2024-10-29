@@ -203,7 +203,17 @@ Before starting containerization, the backend and frontend codes of E-Deliver ap
     ```
 - In backend code (<a href="https://github.com/E-Deliver/backend">EDeliver-backend</a> repository):
   
-  - In **application.properties** file, we'll change this ligne of code: ```spring.datasource.url=jdbc:mysql://localhost:3306/edeliver```, with this one: ```spring.datasource.url=jdbc:mysql://mysql:3306/edeliver```
+  - In **application.properties** file, we'll change this ligne of code:
+    
+    ```
+      spring.datasource.url=jdbc:mysql://localhost:3306/edeliver
+    ```
+    
+    , with this one:
+    
+    ```
+      spring.datasource.url=jdbc:mysql://mysql:3306/edeliver
+    ```
 
   - Add in the same location of the previous file, the following files as follows:
 
@@ -252,6 +262,28 @@ Before starting containerization, the backend and frontend codes of E-Deliver ap
         context-path: /
     ```
 
-### Preparing Docker Environment to start containerization
+### Preparing Docker environment to start containerization
 
 In this repository, we added Dockerfiles for <a href="https://github.com/E-Deliver/EDeliver-DevOps/blob/main/docker/backend/Dockerfile">backend</a> and <a href="https://github.com/E-Deliver/EDeliver-DevOps/blob/main/docker/frontend/Dockerfile">frontend</a> codes, as-well-as <a href="https://github.com/E-Deliver/EDeliver-DevOps/blob/main/docker-compose.yml">YAML file</a> of Docker Compose, in order to run together the various sides of the application.
+
+## How run E-Deliver application using Docker?
+
+_Note: Ensure that Docker Engine in Docker Desktop is already run_
+
+**IMPORTANT:** please clone the repository before making the next steps: ```git clone https://github.com/E-Deliver/EDeliver-DevOps.git```
+
+### Creating container locally:
+
+Make sure that you run the following commandes by order:
+
+1. ```cd EDeliver-DevOps``` (changes the current directory to **EDeliver-DevOps**, where project files are likely located)
+2. ```cd EDeliver-backend``` (navigates into the **EDeliver-backend** directory, which contains the backend project files)
+3. ```mvn clean package -DskipTests``` (runs Maven to clean and package the application into a .jar file, skipping tests to save time)
+4. ```docker build -t edeliver/edeliver-backend:v1 -f ../docker/backend/Dockerfile .``` (builds a **Docker image** for the backend, tagging it as **edeliver/edeliver-backend:v1** and using a specific **Dockerfile** for configuration)
+5. ```cd ..``` (moves up one directory level, returning to **EDeliver-DevOps**)
+6. ```cd EDeliver-frontend```
+7. ```docker build -t edeliver/edeliver-frontend:v1 -f ../docker/frontend/Dockerfile .``` (navigates into the **EDeliver-frontend** directory, which contains the frontend project files)
+8. ```cd ..``` (moves up one directory level, returning to **EDeliver-DevOps**)
+9. ```docker compose up -d``` (starts all services defined in the **docker-compose.yml** file in detached mode, running them in the background)
+
+Then, open a navigator and tap: **http://localhost:4200/**, to navigate into E-Deliver in containerization mode.
