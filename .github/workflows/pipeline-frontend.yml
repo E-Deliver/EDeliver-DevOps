@@ -1,0 +1,52 @@
+name: CI/CD Pipeline for Frontend of EDeliver App
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - EDeliver-frontend/**
+      - docker/frontend/**
+      - 'docker-compose.yml'
+      - .github/workflows/*-frontend.yml
+  pull_request:
+    branches: ["main"]
+    paths:
+      - EDeliver-frontend/**
+      - docker/frontend/**
+      - 'docker-compose.yml'
+      - .github/workflows/*-frontend.yml
+
+jobs:
+    Build-Push-Docker-Image:
+      name: Build & push Docker Image of UAT environment for Frontend App
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+        - name: Extract project version
+          id: extract_version
+          run: |
+            cd EDeliver-frontend
+            VERSION=$(jq -r '.version' package.json)
+            if [ -z "$VERSION" ]; then
+            VERSION="latest"
+            fi
+            echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        - name: Login to DockerHub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Build & Push to DockerHub
+          uses: docker/build-push-action@v5
+          with:
+            context: EDeliver-frontend
+            file: docker/frontend/Dockerfile
+            push: true
+            platforms: linux/amd64
+            tags: ${{ secrets.DOCKER_USERNAME }}/edeliver-frontend:${{ steps.extract_version.outputs.VERSION }}, ${{ secrets.DOCKER_USERNAME }}/edeliver-frontend:uat
+            build-args: |
+              PROFILE=dev
+              APP_VERSION=${{ steps.extract_version.outputs.VERSION }}
